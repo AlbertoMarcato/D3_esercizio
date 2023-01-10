@@ -1,7 +1,7 @@
 const svgEl = document.getElementById('chart')
 const width = svgEl.getAttribute('width')
 const height = svgEl.getAttribute('height')
-const padding = 80
+const padding = 100
 const svg = d3.select('#chart')
 const color1 = '#87CEFA'
 const color2 = '#90EE90'
@@ -29,7 +29,7 @@ const describeArc = (x, y, radius, startAngle, endAngle) => {
 	    "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y
 	].join(" ")
 
-	return d + `L ${radius/2} ${radius/2} Z`       
+	return d + `L ${x} ${y} Z`       
 }
 
 // when you need to make the slice of the pie chart : 
@@ -56,12 +56,12 @@ const xScale=d3.scaleLinear()
 
 
 const yScale=d3.scaleLinear()
-	.domain([0,d3.max(data, d => d.value)])
-	.range([width-padding,padding])
+	.domain([0,d3.max(data, d => d.evasion)])
+	.range([height-padding,padding])
 
 const yAxis=d3.axisLeft(yScale)
-	.ticks(10)
-	.tickSize(-(width-(padding*2)))
+	.ticks(9)
+	.tickSize(-(height-(padding*2)))
 
 const yTicks = svg
 	.append('g')
@@ -84,19 +84,30 @@ svg
 	.style('stroke-width', 0)
 
 
-const arc = describeArc(100, 100, 100, 0, 90)
+const arc = describeArc(300, 300, 100, 20, 100)
 	
-const pie = svg
-	.selectAll('circle')
+const pies = svg
+	.selectAll('g')
 	.data(data)
 	.enter()
+	.append('g')
+
+// const circle = pies
+// 	.append('circle')
+// 	.attr('cx',(d, i) => padding + xScale(i))
+// 	.attr('cy',d => yScale(d.evasion))
+// 	.attr('r',10)
+// 	.attr('fill','orange')
+
+const circle = pies
 	.append('circle')
-	.attr('cx',200)
-	.attr('cy',100)
-	.attr('r',55)
+	.attr('cx',300)
+	.attr('cy',300)
+	.attr('r',100)
 	.attr('fill','orange')
-	.setAttribute("d", arc)
 
-
+const arcs = pies
+	.append('path')
+	.attr('d',arc)
 		// .attr('x', (describeArc(data[0].companyType,data[0].evasion, 3, 0, data[0].percControlled), i) => barPadding + xScale(i))
 
