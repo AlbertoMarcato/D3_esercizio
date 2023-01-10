@@ -121,7 +121,7 @@ const textsType = pies
 
 const textsPerc = pies
 	.append('text')
-	.text(function(d){ return d.percControlled + '%'})
+	.text(function(d){ return d.percControlled})
 	.attr("transform", `translate(${ pieRadius+ wpadding}, -20)`)
 	
 
