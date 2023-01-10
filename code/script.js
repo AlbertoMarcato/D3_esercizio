@@ -4,9 +4,11 @@ const height = svgEl.getAttribute('height')
 const padding = 100
 const svg = d3.select('#chart')
 const color1 = '#87CEFA'
-const color2 = '#90EE90'
+const color2 = '#FF8400'
 const textColor = '#194d30'
-const pieRadius = 20
+const pieRadius = 30
+const hpadding = 50
+const wpadding = 80
 
 const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
 	var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
@@ -51,22 +53,24 @@ console.log(data)
 //start
 
 const xScale=d3.scaleLinear()
-	.domain([0,data.lenght])
-	.range([padding,width-padding])
+	.domain([0,data.length])
+	.range([wpadding,width-wpadding])
 
 
 const yScale=d3.scaleLinear()
 	.domain([0,d3.max(data, d => d.evasion)])
-	.range([height-padding,padding])
+	.range([height-hpadding,hpadding])
 
 const yAxis=d3.axisLeft(yScale)
 	.ticks(9)
-	.tickSize(-(height-(padding*2)))
+	.tickSize(-(width-(wpadding*2)))
 
 const yTicks = svg
 	.append('g')
-	.attr('transform', `translate(${padding}, 0)`)
+	.attr('transform', `translate(${wpadding}, 0)`)
 	.call(yAxis)
+
+	console.log(xScale(0))
 
 // colouring the ticks
 svg
@@ -91,23 +95,38 @@ const pies = svg
 	.data(data)
 	.enter()
 	.append('g')
+	
+
+const circle = svg
+	.selectAll('circle')
+	.data(data)
+	.enter()
+ 	.append('circle')
+ 		.attr('cx',(d, i) => wpadding + xScale(i))
+ 		.attr('cy',d => yScale(d.evasion))
+ 		.attr('r',pieRadius)
+ 		.attr('fill',color1)
+		.append()
+
+const arcs = svg
+	.selectAll('path')
+	.data(data)
+	.enter()
+ 	.append('path')
+		.attr('d', (d,i) => describeArc((wpadding + xScale(i)),yScale(d.evasion), pieRadius, 0, (d.percControlled * 360)))
+		.attr('fill', color2)
+
+// describeArc(((d, i) => xScale(i)),(d => yScale(d.evasion)), pieRadius, 0, (data[0].percControlled * 360))
 
 // const circle = pies
 // 	.append('circle')
-// 	.attr('cx',(d, i) => padding + xScale(i))
-// 	.attr('cy',d => yScale(d.evasion))
-// 	.attr('r',10)
+// 	.attr('cx',300)
+// 	.attr('cy',300)
+// 	.attr('r',100)
 // 	.attr('fill','orange')
 
-const circle = pies
-	.append('circle')
-	.attr('cx',300)
-	.attr('cy',300)
-	.attr('r',100)
-	.attr('fill','orange')
-
-const arcs = pies
-	.append('path')
-	.attr('d',arc)
-		// .attr('x', (describeArc(data[0].companyType,data[0].evasion, 3, 0, data[0].percControlled), i) => barPadding + xScale(i))
+// const arcs = pies
+// 	.append('path')
+// 	.attr('d',arc)
+// 		// .attr('x', (describeArc(data[0].companyType,data[0].evasion, 3, 0, data[0].percControlled), i) => barPadding + xScale(i))
 
