@@ -97,7 +97,21 @@ const pies = svg
 	.append('g')
 		.attr('class', 'stringa')
 		.attr('transform',(d,i) => `translate(${xScale(i)}, ${yScale(d.evasion)})`)
-	
+
+const lines =pies
+	.append('line')
+		.attr('x1',(d,i) => -xScale(i)+wpadding)
+		.attr('y1', 0)
+		.attr('x2', wpadding)
+		.attr('y2', 0)
+		.style("stroke",'black')
+		.style('width', 2)
+
+const textsEva = pies
+		.append('text')
+		.text(function(d){ return d.evasion/1000000000 + '*e^9'})
+		.style('font-size', "12px")
+		.attr("transform",(d,i) => `translate(${ -xScale(i)+wpadding}, -5)`)
 
 const circles = pies
  	.append('circle')
@@ -115,15 +129,17 @@ const arcs = pies
 const textsType = pies
 	.append('text')
 	.text(function(d){ return d.companyType})
-	.attr("transform", `translate(${wpadding}, ${1.5 * pieRadius})`)
+	.attr("transform", `translate(${wpadding}, ${1.8 * pieRadius})`)
 	.style("text-anchor", "middle")
-	.style("font-size", 14)
+	.style("font-size", "20px")
+	.style('font-weight','600')
 
 const textsPerc = pies
 	.append('text')
-	.text(function(d){ return d.percControlled})
-	.attr("transform", `translate(${ pieRadius+ wpadding}, -20)`)
-	
+		.text(function(d){ return Math.round(d.percControlled*100) + '%'})
+		.attr("transform", `translate(${ pieRadius+ wpadding}, -20)`)
+		
+
 
 console.log(describeArc((wpadding + xScale(0)),yScale(data[0].evasion), pieRadius, 0, (data[0].percControlled * 360)))
 
