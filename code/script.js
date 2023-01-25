@@ -9,6 +9,11 @@ const textColor = '#194d30'
 const pieRadius = 30
 const hpadding = 60
 const wpadding = 80
+const svgEl2 = document.getElementById('quadrato-1')
+const width2 = svgEl2.getAttribute('width')
+const height2 = svgEl2.getAttribute('height')
+const svg2 = d3.select('#quadrato-1')
+
 
 const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
 	var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
@@ -42,7 +47,7 @@ const data = d3.csvParse(dataset, d => {
 		companyType : d.companyType,
 		nCompanies : +d.nCompanies,
 		percControlled : +d.percControlled,
-		evasion : +d.evasion
+		evasion : +d.evasion/1000000000
 	}
 })
 
@@ -56,7 +61,6 @@ const xScale=d3.scaleLinear()
 	.domain([0,data.length])
 	.range([wpadding,width-wpadding])
 
-
 const yScale=d3.scaleLinear()
 	.domain([0,d3.max(data, d => d.evasion)])
 	.range([height-hpadding,hpadding])
@@ -69,6 +73,58 @@ const yTicks = svg
 	.append('g')
 	.attr('transform', `translate(${wpadding}, 0)`)
 	.call(yAxis)
+	.style("font-size", "14px")
+
+svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "middle")
+    .attr("y", hpadding-20)
+    .attr("x", -height/2)
+    .attr("dy", "1")
+    .attr("transform", "rotate(-90)")
+    .text("Evasion [$ billion]")
+	.style("font-size", "20px");
+
+svg.append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "middle")
+    .attr("x", width/2)
+    .attr("y", height - 22)
+	.style("font-size", "20px")
+    .text("Company type");
+	
+svg.append("svg:defs")
+	.append("svg:marker")
+		.attr("id", "triangle")
+		.attr("refX", 6)
+		.attr("refY", 6)
+		.attr("markerWidth", 30)
+		.attr("markerHeight", 30)
+		.attr("orient", "auto")
+		.append("path")
+		.attr("d", "M 0 0 12 6 0 12 3 6")
+		.style("fill", "black");
+
+const AsseY = svg
+	.append("g")
+	.append('line')
+		.attr('x1', wpadding)
+		.attr('y1', height-hpadding)
+		.attr('x2', wpadding)
+		.attr('y2', hpadding-20)
+		.style('marker-end', "url(#triangle)")
+		.style("stroke",'black')
+		.style('width', 2)
+
+const AsseX = svg
+	.append("g")
+	.append('line')
+		.attr('x1', wpadding)
+		.attr('y1', height-hpadding)
+		.attr('x2', width-wpadding)
+		.attr('y2', height-hpadding)
+		.style("stroke",'black')
+		.style('width', 2)
 
 	console.log(xScale(0))
 
@@ -98,7 +154,7 @@ const pies = svg
 		.attr('class', 'stringa')
 		.attr('transform',(d,i) => `translate(${xScale(i)}, ${yScale(d.evasion)})`)
 
-const lines =pies
+const lines = pies
 	.append('line')
 		.attr('x1',(d,i) => -xScale(i)+wpadding)
 		.attr('y1', 0)
@@ -108,10 +164,11 @@ const lines =pies
 		.style('width', 2)
 
 const textsEva = pies
-		.append('text')
-		.text(function(d){ return d.evasion/1000000000 + '*e^9'})
-		.style('font-size', "12px")
-		.attr("transform",(d,i) => `translate(${ -xScale(i)+wpadding}, -5)`)
+	.append('text')
+		.text(function(d){ return d.evasion})
+		.style("stroke",'black')
+		.style('font-size', "11px")
+		.attr("transform",(d,i) => `translate(${-xScale(i) + wpadding + 10}, -4)`)
 
 const circles = pies
  	.append('circle')
@@ -119,29 +176,77 @@ const circles = pies
  		.attr('cy', 0)
  		.attr('r',pieRadius)
  		.attr('fill',color1) 
-
+		.style('stroke', 'black')
 
 const arcs = pies
  	.append('path')
 		.attr('d', d => describeArc((wpadding), 0, pieRadius, 0, (d.percControlled * 360)))
 		.attr('fill', color2)
+		.style('stroke', 'black')
 
 const textsType = pies
 	.append('text')
-	.text(function(d){ return d.companyType})
-	.attr("transform", `translate(${wpadding}, ${1.8 * pieRadius})`)
-	.style("text-anchor", "middle")
-	.style("font-size", "20px")
-	.style('font-weight','600')
+		.text(function(d){ return d.companyType})
+		.attr("transform", `translate(${wpadding}, ${2 * pieRadius})`)
+		.style("text-anchor", "middle")
+		.style("font-size", "20px")
+		.style('font-weight','600')
 
 const textsPerc = pies
 	.append('text')
 		.text(function(d){ return Math.round(d.percControlled*100) + '%'})
-		.attr("transform", `translate(${ pieRadius+ wpadding}, -20)`)
+		.attr("transform", `translate(${pieRadius + wpadding}, -20)`)
 		
 
+console.log(describeArc((wpadding + xScale(0)), yScale(data[0].evasion), pieRadius, 0, (data[0].percControlled * 360)))
 
-console.log(describeArc((wpadding + xScale(0)),yScale(data[0].evasion), pieRadius, 0, (data[0].percControlled * 360)))
+const pie = svg2
+	.selectAll('g.string')
+	.data(data)
+	.enter()
+	.append('g')
+		.attr('class', 'string')
 
+const circle = pie
+	.append('circle')
+		.attr('cx', width2/2)
+		.attr('cy', height2/2)
+		.attr('r',pieRadius)
+		.attr('fill',color1) 
+		.style('stroke', 'black')
 
+const arco = pie
+	.append('path')
+		.attr('d', d => describeArc(width2/2, height2/2, pieRadius, 0, 90))
+		.attr('fill', color2)
+		.style('stroke', 'black')
 
+const textsTyp = pie
+	.append('text')
+		.text("Non controllato")
+		.attr("transform", `translate(5, ${1 * pieRadius})`)
+		.style("text-anchor", "start")
+		.style("font-size", "12px")
+const textsTyp2 = pie
+	.append('text')
+		.text("Controllato")
+		.attr("transform", `translate(${width2-30}, ${0.8 * pieRadius})`)
+		.style("text-anchor", "end")
+		.style("font-size", "12px")
+
+const line1 = pie
+	.append('line')
+		.attr('x1', 50)
+		.attr('y1', pieRadius+5)
+		.attr('x2', width2/2-10)
+		.attr('y2', height2/2)
+		.style("stroke",'black')
+		.style('width', 2)
+const line2 = pie
+	.append('line')
+		.attr('x1', width2-60)
+		.attr('y1', 0.8*pieRadius+5)
+		.attr('x2', width2/2+10)
+		.attr('y2', pieRadius+10)
+		.style("stroke",'black')
+		.style('width', 2)

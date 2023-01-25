@@ -41,6 +41,10 @@ svg {
 	border: 1px solid #000;
 }
 
+#quadrato-1{
+	border: 0px;
+}
+
 #legenda {
 	background-color: #FFF;
 	border: 1px solid #000;
