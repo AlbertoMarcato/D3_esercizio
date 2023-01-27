@@ -7,7 +7,7 @@ const color1 = '#87CEFA'
 const color2 = '#FF8400'
 const textColor = '#194d30'
 const pieRadius = 30
-const hpadding = 60
+const hpadding = 100
 const wpadding = 80
 const svgEl2 = document.getElementById('quadrato-1')
 const width2 = svgEl2.getAttribute('width')
@@ -78,7 +78,7 @@ const yTicks = svg
 svg.append("text")
     .attr("class", "y label")
     .attr("text-anchor", "middle")
-    .attr("y", hpadding-20)
+    .attr("y", wpadding-40)
     .attr("x", -height/2)
     .attr("dy", "1")
     .attr("transform", "rotate(-90)")
@@ -89,7 +89,7 @@ svg.append("text")
     .attr("class", "x label")
     .attr("text-anchor", "middle")
     .attr("x", width/2)
-    .attr("y", height - 22)
+    .attr("y", height - hpadding/2)
 	.style("font-size", "20px")
     .text("Company type");
 	
@@ -187,7 +187,7 @@ const arcs = pies
 const textsType = pies
 	.append('text')
 		.text(function(d){ return d.companyType})
-		.attr("transform", `translate(${wpadding}, ${2 * pieRadius})`)
+		.attr("transform", `translate(${wpadding}, ${1.6 * pieRadius})`)
 		.style("text-anchor", "middle")
 		.style("font-size", "20px")
 		.style('font-weight','600')
@@ -195,7 +195,7 @@ const textsType = pies
 const textsPerc = pies
 	.append('text')
 		.text(function(d){ return Math.round(d.percControlled*100) + '%'})
-		.attr("transform", `translate(${pieRadius + wpadding}, -20)`)
+		.attr("transform", `translate(${wpadding-8}, ${-pieRadius-5})`)
 		
 
 console.log(describeArc((wpadding + xScale(0)), yScale(data[0].evasion), pieRadius, 0, (data[0].percControlled * 360)))
@@ -224,20 +224,20 @@ const arco = pie
 const textsTyp = pie
 	.append('text')
 		.text("Non controllato")
-		.attr("transform", `translate(5, ${1 * pieRadius})`)
+		.attr("transform", `translate(0, ${0.8 * pieRadius})`)
 		.style("text-anchor", "start")
-		.style("font-size", "12px")
+		.style("font-size", "14px")
 const textsTyp2 = pie
 	.append('text')
 		.text("Controllato")
-		.attr("transform", `translate(${width2-30}, ${0.8 * pieRadius})`)
+		.attr("transform", `translate(${width2-25}, ${0.6 * pieRadius})`)
 		.style("text-anchor", "end")
-		.style("font-size", "12px")
+		.style("font-size", "14px")
 
 const line1 = pie
 	.append('line')
 		.attr('x1', 50)
-		.attr('y1', pieRadius+5)
+		.attr('y1', 0.8*pieRadius+5)
 		.attr('x2', width2/2-10)
 		.attr('y2', height2/2)
 		.style("stroke",'black')
@@ -245,7 +245,7 @@ const line1 = pie
 const line2 = pie
 	.append('line')
 		.attr('x1', width2-60)
-		.attr('y1', 0.8*pieRadius+5)
+		.attr('y1', 0.6*pieRadius+5)
 		.attr('x2', width2/2+10)
 		.attr('y2', pieRadius+10)
 		.style("stroke",'black')

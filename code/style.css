@@ -38,7 +38,7 @@ main {
 
 svg {
 	background-color: #FFF;
-	border: 1px solid #000;
+	border: 1px solid #3CB371;
 }
 
 #quadrato-1{
@@ -47,7 +47,7 @@ svg {
 
 #legenda {
 	background-color: #FFF;
-	border: 1px solid #000;
+	border: 1px solid #3CB371;
 	padding:10px;
 	margin:10px;
 }
