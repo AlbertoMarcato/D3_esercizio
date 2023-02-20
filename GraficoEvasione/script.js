@@ -71,7 +71,7 @@ const yAxis=d3.axisLeft(yScale)
 
 const yTicks = svg
 	.append('g')
-	.attr('transform', `translate(${wpadding}, 0)`)
+	.attr('transform', `translate(${wpadding -4}, 0)`)
 	.call(yAxis)
 	.style("font-size", "14px")
 
@@ -82,7 +82,7 @@ svg.append("text")
     .attr("x", -height/2)
     .attr("dy", "1")
     .attr("transform", "rotate(-90)")
-    .text("Evasion [$ billion]")
+    .text("Evasion (€ billion)")
 	.style("font-size", "20px");
 
 svg.append("text")
@@ -189,7 +189,7 @@ const textsType = pies
 		.text(function(d){ return d.companyType})
 		.attr("transform", `translate(${wpadding}, ${1.6 * pieRadius})`)
 		.style("text-anchor", "middle")
-		.style("font-size", "20px")
+		.style("font-size", "18px")
 		.style('font-weight','600')
 
 const textsPerc = pies
